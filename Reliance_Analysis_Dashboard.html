@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stock Market: Analyst — Reliance Industries</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --navy:#0b1f3a;
+    --navy2:#122a4d;
+    --accent:#1a73e8;
+    --accent2:#0f9d58;
+    --amber:#e8a317;
+    --red:#d93025;
+    --bg:#f4f6fa;
+    --card:#ffffff;
+    --border:#e2e6ee;
+    --text:#1b2333;
+    --muted:#5b6577;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.55;
+  }
+  a{color:var(--accent);}
+  .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{
+    background:linear-gradient(180deg,var(--navy),var(--navy2));
+    color:#dce6f7;
+    padding:22px 16px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .brand{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#8fa8d6;margin-bottom:2px;}
+  .brand-title{font-size:19px;font-weight:700;color:#fff;margin-bottom:18px;}
+  .sidebar nav a{
+    display:block;color:#c3d1ec;text-decoration:none;font-size:13px;
+    padding:7px 10px;border-radius:8px;margin-bottom:2px;
+  }
+  .sidebar nav a:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .sidebar .step-num{
+    display:inline-block;width:18px;height:18px;border-radius:50%;
+    background:rgba(255,255,255,.12);color:#fff;font-size:10.5px;text-align:center;
+    line-height:18px;margin-right:8px;
+  }
+  .glossary-btn{
+    margin-top:18px;width:100%;padding:10px;border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.06);color:#fff;border-radius:8px;cursor:pointer;
+    font-size:13px;font-weight:600;
+  }
+  .glossary-btn:hover{background:rgba(255,255,255,.15);}
+  .sidebar-note{font-size:11.5px;color:#7f93bd;margin-top:16px;}
+
+  /* MAIN */
+  main{padding:28px 40px 80px;max-width:1100px;}
+  .hero{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px 26px;margin-bottom:26px;
+    display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;
+  }
+  .hero h1{margin:0 0 4px;font-size:24px;}
+  .hero .ticker{color:var(--muted);font-size:14px;font-weight:600;}
+  .hero .desc{margin-top:8px;max-width:560px;color:var(--muted);font-size:14px;}
+  .hero-stats{display:flex;gap:22px;flex-wrap:wrap;}
+  .hero-stat{text-align:right;}
+  .hero-stat .v{font-size:19px;font-weight:700;}
+  .hero-stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+
+  .disclaimer{
+    background:#fff8e6;border:1px solid #f0d896;color:#7a5c00;font-size:12.5px;
+    padding:10px 14px;border-radius:8px;margin-bottom:26px;
+  }
+
+  section{margin-bottom:34px;scroll-margin-top:20px;}
+  .step-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .step-badge{
+    background:var(--accent);color:#fff;font-weight:700;font-size:12.5px;
+    width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .step-head h2{margin:0;font-size:19px;}
+  .step-sub{color:var(--muted);font-size:13.5px;margin:0 0 14px 36px;}
+
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 22px;margin-bottom:14px;
+  }
+  .card h3{margin-top:0;font-size:15px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media(max-width:800px){.grid2,.grid3{grid-template-columns:1fr;} .app{grid-template-columns:1fr;} .sidebar{position:relative;height:auto;}}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border);}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;}
+  tr:last-child td{border-bottom:none;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+
+  .metric-box{
+    background:#f7f9fc;border:1px solid var(--border);border-radius:10px;padding:12px 14px;
+  }
+  .metric-box .m-val{font-size:20px;font-weight:700;}
+  .metric-box .m-label{font-size:12px;color:var(--muted);}
+  .metric-box .m-note{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
+  .badge.good{background:#e6f6ec;color:#0f7a3b;}
+  .badge.watch{background:#fff3da;color:#96650a;}
+  .badge.risk{background:#fde9e8;color:#b1231d;}
+  .badge.neutral{background:#eaf1fb;color:#1a5bab;}
+
+  .callout{border-left:4px solid var(--accent);background:#eef4fd;padding:12px 16px;border-radius:0 8px 8px 0;font-size:13.5px;margin-top:10px;}
+  .callout.q{border-left-color:var(--accent2);background:#e9f8f0;}
+  .callout.r{border-left-color:var(--red);background:#fdeceb;}
+
+  ul.tight{margin:8px 0;padding-left:20px;}
+  ul.tight li{margin-bottom:6px;font-size:13.8px;}
+
+  /* clickable jargon term */
+  .term{
+    border-bottom:1.5px dotted var(--accent);color:var(--navy2);cursor:pointer;font-weight:600;
+    padding:0 1px;
+  }
+  .term:hover{background:#eaf1fb;}
+
+  /* real statement recreation */
+  .stmt{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:10px;}
+  .stmt .stmt-title{background:var(--navy);color:#fff;padding:10px 14px;font-size:12px;font-weight:700;letter-spacing:.02em;}
+  .stmt table{font-size:13px;}
+  .stmt th{background:#eef2f8;}
+  .stmt tr.spot td{background:#fff6da;}
+  .pin{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;min-width:18px;border-radius:50%;background:var(--red);color:#fff;font-size:10.5px;font-weight:700;margin-right:6px;}
+  .legend-item{display:flex;gap:8px;margin-bottom:10px;font-size:13.3px;align-items:flex-start;}
+  .legend-item .pin{margin-top:2px;}
+
+  /* flow diagram connecting the 3 statements */
+  .flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:16px 0;}
+  .flow-box{border:2px solid var(--accent);background:#f5f9ff;border-radius:10px;padding:12px 18px;text-align:center;max-width:480px;width:100%;}
+  .flow-box .fb-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+  .flow-box .fb-val{font-size:16.5px;font-weight:700;margin-top:3px;}
+  .flow-arrow{font-size:24px;color:var(--accent);line-height:1;text-align:center;margin:2px 0;}
+  .flow-arrow .fa-cap{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:1px;}
+
+  .analogy-box{background:#f7f9fc;border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .analogy-box .a-title{font-size:13.5px;font-weight:700;margin-bottom:6px;}
+  .analogy-box .a-body{font-size:13px;color:var(--muted);}
+
+  /* popover */
+  #term-popover{
+    position:fixed;max-width:320px;background:var(--navy);color:#e9eefb;
+    border-radius:10px;padding:14px 16px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.25);
+    z-index:1000;display:none;
+  }
+  #term-popover .tp-title{font-weight:700;font-size:13.5px;margin-bottom:6px;color:#fff;}
+  #term-popover .tp-close{
+    position:absolute;top:8px;right:10px;cursor:pointer;color:#9fb3d9;font-weight:700;
+  }
+
+  /* glossary panel */
+  #glossary-overlay{
+    position:fixed;inset:0;background:rgba(10,18,35,.55);display:none;z-index:1100;
+    align-items:flex-start;justify-content:center;padding:40px 20px;
+  }
+  #glossary-panel{
+    background:#fff;border-radius:14px;max-width:720px;width:100%;max-height:85vh;overflow-y:auto;
+    padding:26px 30px;
+  }
+  #glossary-panel h2{margin-top:0;}
+  #glossary-panel .g-close{float:right;cursor:pointer;font-size:20px;color:var(--muted);}
+  .g-item{padding:10px 0;border-bottom:1px solid var(--border);}
+  .g-item .g-term{font-weight:700;font-size:14px;}
+  .g-item .g-def{font-size:13px;color:var(--muted);margin-top:3px;}
+  #glossary-search{
+    width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;margin-bottom:12px;
+  }
+
+  footer{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid var(--border);padding-top:16px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Stock Market : Analyst</div>
+    <div class="brand-title">Reliance Industries</div>
+    <nav>
+      <a href="#framework"><span class="step-num">✦</span>The Framework</a>
+      <a href="#step1"><span class="step-num">1</span>Understand the Business</a>
+      <a href="#step2"><span class="step-num">2</span>The 3 Financial Statements</a>
+      <a href="#step3"><span class="step-num">3</span>Who Owns It</a>
+      <a href="#step4"><span class="step-num">4</span>Income Statement, In Depth</a>
+      <a href="#step5"><span class="step-num">5</span>Balance Sheet, In Depth</a>
+      <a href="#step6"><span class="step-num">6</span>Cash Flow, In Depth</a>
+      <a href="#step7"><span class="step-num">7</span>Valuation Ratios</a>
+      <a href="#step8"><span class="step-num">8</span>Dividend Policy</a>
+      <a href="#step9"><span class="step-num">9</span>Risks &amp; Catalysts</a>
+      <a href="#step10"><span class="step-num">10</span>Putting It Together</a>
+    </nav>
+    <button class="glossary-btn" onclick="openGlossary()">📖 Full Glossary (A–Z)</button>
+    <div class="sidebar-note">Every underlined term is clickable — click any of them for a plain-English definition.</div>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1>Reliance Industries Ltd <span class="ticker">(NSE: RELIANCE)</span></h1>
+        <div class="desc">India's largest company — it runs a refinery &amp; chemicals business, a gas-drilling business, a mobile network (Jio), and a chain of retail stores. Promoted by the Ambani family; led by Chairman Mukesh Ambani.</div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="v">₹1,327</div><div class="l">Share Price (17 Jul 2026)</div></div>
+        <div class="hero-stat"><div class="v">₹17.5L Cr</div><div class="l"><span class="term" data-term="market_cap">Market Cap</span></div></div>
+        <div class="hero-stat"><div class="v">₹1,253 – ₹1,612</div><div class="l"><span class="term" data-term="52w">52-Week Range</span></div></div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      This dashboard is a <b>learning tool</b>, not investment advice. The figures in Steps 2, 4, 5 and 6 are taken directly from Reliance's official, audited results filed with the stock exchanges for the year ended 31 March 2026 (filed 24 April 2026) — the same document anyone can download for free. The goal here is to teach you <i>how</i> to read it, not to tell you what to do with your money.
+    </div>
+
+    <!-- FRAMEWORK -->
+    <section id="framework">
+      <div class="step-head"><div class="step-badge">✦</div><h2>The Framework — Your Repeatable Checklist</h2></div>
+      <p class="step-sub">This is the method. Once it clicks for Reliance, you can run the same 10 steps on any company — Nifty 50 or otherwise.</p>
+      <div class="card">
+        <div class="grid3">
+          <div><b>1. Understand the Business</b><br><span style="color:var(--muted);font-size:13px;">What does it actually sell, in plain words?</span></div>
+          <div><b>2. Learn the 3 Statements</b><br><span style="color:var(--muted);font-size:13px;">What is an income statement, balance sheet, cash flow statement — from scratch.</span></div>
+          <div><b>3. Who Owns It</b><br><span style="color:var(--muted);font-size:13px;">Promoters, institutions, and what their behaviour signals.</span></div>
+          <div><b>4. Income Statement</b><br><span style="color:var(--muted);font-size:13px;">Is revenue and profit growing, and where from?</span></div>
+          <div><b>5. Balance Sheet</b><br><span style="color:var(--muted);font-size:13px;">What does it own vs. owe? How risky is the debt?</span></div>
+          <div><b>6. Cash Flow</b><br><span style="color:var(--muted);font-size:13px;">Is reported profit backed by real cash?</span></div>
+          <div><b>7. Valuation Ratios</b><br><span style="color:var(--muted);font-size:13px;">Is the market pricing it cheap, fair, or expensive?</span></div>
+          <div><b>8. Dividend Policy</b><br><span style="color:var(--muted);font-size:13px;">How much profit is paid out vs. reinvested?</span></div>
+          <div><b>9. Risks &amp; Catalysts</b><br><span style="color:var(--muted);font-size:13px;">What could change the story — for better or worse?</span></div>
+          <div><b>10. Putting It Together</b><br><span style="color:var(--muted);font-size:13px;">Combine all steps into one coherent picture.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <section id="step1">
+      <div class="step-head"><div class="step-badge">1</div><h2>Understand the Business</h2></div>
+      <p class="step-sub">Forget complicated words for a moment. What does this company actually sell, to whom, and how does it make money on it?</p>
+
+      <div class="card">
+        <h3>You've probably already used Reliance's products</h3>
+        <p>If you've ever recharged a <b>Jio SIM card</b>, bought vegetables at <b>Reliance Fresh</b> or clothes on <b>Ajio</b>, filled petrol at a <b>Jio-bp pump</b>, or used anything made of plastic or polyester — you've been Reliance's customer without necessarily realizing it. This one company actually runs four completely different everyday businesses side by side.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>🛢️ The Refinery &amp; Plastics Business <span style="font-weight:400;color:var(--muted);font-size:12px;">(officially called <span class="term" data-term="o2c">Oil-to-Chemicals</span>)</span></h3>
+          <p><b>What they buy:</b> crude oil — the thick black liquid pumped out of the ground in the Middle East and elsewhere.</p>
+          <p><b>What they do with it:</b> at their giant Jamnagar refinery in Gujarat (the largest refinery complex in the world at a single location), they heat and separate crude oil into petrol, diesel, jet fuel, cooking gas (LPG), and raw chemical material.</p>
+          <p><b>What they sell:</b> fuel through Jio-bp petrol pumps, and chemical raw material to other factories that turn it into the plastic bag, water bottle, or polyester shirt you use every day.</p>
+          <p><b>How they make money:</b> buy crude oil at the global market price, then sell the fuel and chemicals for more, combined, than that crude cost. That gap is called a "refining margin" — and it moves up and down with global oil markets, entirely outside Reliance's control.</p>
+        </div>
+
+        <div class="card">
+          <h3>⛽ The Gas-Drilling Business <span style="font-weight:400;color:var(--muted);font-size:12px;">(officially Oil &amp; Gas / E&amp;P)</span></h3>
+          <p><b>What they do:</b> instead of buying crude oil from someone else, this business drills its own wells — mainly under the sea off India's east coast, in a field called KG-D6 — and pulls out natural gas and oil directly from the ground.</p>
+          <p><b>Who buys it:</b> fertiliser factories, power plants, and city gas-pipeline networks across India.</p>
+          <p><b>How they make money:</b> the cost of drilling and extracting, versus the price they're allowed to sell the gas at (partly regulated by the Indian government). A very high profit margin per unit, but a much smaller business overall than the other three.</p>
+        </div>
+
+        <div class="card">
+          <h3>📶 The Phone &amp; Internet Business <span style="font-weight:400;color:var(--muted);font-size:12px;">(officially Digital Services / Jio)</span></h3>
+          <p><b>What they built:</b> mobile towers, undersea cables, and fibre-optic lines across the entire country — an enormous, one-time cost running into lakhs of crores of rupees.</p>
+          <p><b>What you pay for:</b> your monthly mobile recharge, or your JioFiber home broadband bill.</p>
+          <p><b>How they make money:</b> once the network already exists, serving one more customer costs very little extra — but that customer pays a fee every single month. This is why, rupee for rupee, the phone &amp; internet business is Reliance's single most profitable one (you'll see this in real numbers in Step 4).</p>
+        </div>
+
+        <div class="card">
+          <h3>🛒 The Shops You Walk Into <span style="font-weight:400;color:var(--muted);font-size:12px;">(officially Retail)</span></h3>
+          <p><b>What it is:</b> Reliance Fresh and Smart Bazaar (groceries), Reliance Trends and Ajio (clothes), Reliance Digital (electronics), and JioMart (online shopping) — over 20,000 stores across India.</p>
+          <p><b>How they make money:</b> buy products in bulk, directly from manufacturers and farmers, at wholesale prices — then sell to you at a retail price. It's the exact same "buy low, sell high" idea as your neighbourhood shopkeeper, just done at a massive, nationwide scale.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>Put simply:</b> owning one Reliance share means owning a small slice of a petrol pump, a gas well, your phone network, and your local supermarket — all bundled into a single stock. Each of these four makes money in a totally different way, which is exactly why we look at each one separately before judging the whole company.
+      </div>
+
+      <div class="card">
+        <h3>Why can't someone just start a competing business tomorrow?</h3>
+        <ul class="tight">
+          <li><b>Refinery &amp; Plastics:</b> building a refinery like Jamnagar costs billions of dollars and takes years to construct — very few companies in the world can even attempt this.</li>
+          <li><b>Gas Drilling:</b> requires a government licence to drill in a specific area, plus expensive deep-sea drilling technology.</li>
+          <li><b>Phone &amp; Internet:</b> needs a government-auctioned spectrum licence (which itself costs tens of thousands of crores) plus years spent laying physical cable and towers nationwide.</li>
+          <li><b>Retail:</b> needs a nationwide supply chain and warehousing network built over many years — hard for a new entrant to replicate quickly.</li>
+        </ul>
+        <p style="color:var(--muted);font-size:13px;margin-top:10px;">These barriers are what analysts mean when they talk about a company's "moat" — reasons a new competitor can't easily walk in and steal the business away.</p>
+      </div>
+
+      <div class="callout q">Reflection: now that you know how each of the four businesses actually earns its money, which one do you think investors get most excited about for the future — and why?</div>
+    </section>
+
+    <!-- STEP 2 : NEW - THE THREE STATEMENTS FROM SCRATCH -->
+    <section id="step2">
+      <div class="step-head"><div class="step-badge">2</div><h2>The Three Financial Statements — From Scratch</h2></div>
+      <p class="step-sub">Every public company publishes three documents, every quarter and every year. Before we read Reliance's real numbers, let's understand what each document actually is.</p>
+
+      <div class="card">
+        <h3>Start with an analogy from your own life</h3>
+        <div class="grid3">
+          <div class="analogy-box">
+            <div class="a-title"><span class="term" data-term="income_statement">Income Statement</span></div>
+            <div class="a-body">= Your monthly salary slip. Money earned (salary) minus money spent (rent, groceries, EMIs) = what's left over. It covers a <i>period</i> of time — a quarter or a year.</div>
+          </div>
+          <div class="analogy-box">
+            <div class="a-title"><span class="term" data-term="balance_sheet">Balance Sheet</span></div>
+            <div class="a-body">= A photo of your bank balance and loans, taken today. What you own (savings, house, car) vs. what you owe (home loan, credit card). One single date, not a period.</div>
+          </div>
+          <div class="analogy-box">
+            <div class="a-title"><span class="term" data-term="cash_flow">Cash Flow Statement</span></div>
+            <div class="a-body">= Your bank statement. Every rupee that actually moved in or out, split into 3 taps: from your job (operating), from buying/selling big things like a car (investing), and from loans/EMIs (financing).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        A company's "annual report" or "quarterly results" is simply these three documents, plus explanatory notes, filed with the stock exchange (<span class="term" data-term="nse_bse">NSE/BSE</span>) and published on the company's investor-relations webpage. Anyone can download them for free — no special access needed. That's exactly where every table below comes from.
+      </div>
+
+      <h3 style="margin:22px 0 4px;">Let's open a real one: Reliance's official FY26 results</h3>
+      <p style="color:var(--muted);font-size:13.5px;margin-top:0;">Below is a faithful recreation of Reliance Industries' actual audited consolidated results for the year ended 31 March 2026, filed with the stock exchanges on 24 April 2026 (source at the bottom of this dashboard). The numbered <span class="pin" style="position:relative;top:-1px;">?</span> markers show exactly where a first-time reader should look — ignore everything else on your first pass.</p>
+
+      <div class="card">
+        <h3>① The Income Statement</h3>
+        <div class="stmt">
+          <div class="stmt-title">AUDITED CONSOLIDATED FINANCIAL RESULTS — YEAR ENDED 31 MARCH 2026 (₹ in Crore)</div>
+          <table>
+            <tr><th>Particulars</th><th>FY26</th><th>FY25</th></tr>
+            <tr><td>Value of Sales &amp; Services (Gross Revenue)</td><td class="num">1,175,919</td><td class="num">1,071,174</td></tr>
+            <tr><td>Less: GST Recovered</td><td class="num">100,244</td><td class="num">91,038</td></tr>
+            <tr class="spot"><td><span class="pin">1</span>Revenue from Operations</td><td class="num">1,075,675</td><td class="num">980,136</td></tr>
+            <tr><td>Other Income</td><td class="num">28,962</td><td class="num">17,978</td></tr>
+            <tr><td>Total Income</td><td class="num">1,104,637</td><td class="num">998,114</td></tr>
+            <tr class="spot"><td><span class="pin">2</span>Total Expenses</td><td class="num">981,475</td><td class="num">892,097</td></tr>
+            <tr class="spot"><td><span class="pin">3</span>Profit Before Tax</td><td class="num">123,162</td><td class="num">106,017</td></tr>
+            <tr><td>Tax Expenses (Current + Deferred)</td><td class="num">27,552</td><td class="num">25,230</td></tr>
+            <tr class="spot"><td><span class="pin">4</span>Net Profit (incl. share of associates)</td><td class="num">95,754</td><td class="num">81,309</td></tr>
+            <tr class="spot"><td><span class="pin">5</span>Earnings Per Share, Basic</td><td class="num">₹59.69</td><td class="num">₹51.47</td></tr>
+          </table>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="legend-item"><span class="pin">1</span><div><b>Revenue from Operations</b> — the real sales figure, after removing GST (a tax collected on behalf of the government, not actual company income). Always start reading here, not with the bigger number above it.</div></div>
+          <div class="legend-item"><span class="pin">2</span><div><b>Total Expenses</b> — everything spent to run the business: raw materials, salaries, interest on loans, wear-and-tear (depreciation) on machinery, and other costs, all added up.</div></div>
+          <div class="legend-item"><span class="pin">3</span><div><b>Profit Before Tax</b> — Total Income minus Total Expenses. Remember this number — it becomes the exact starting point of the Cash Flow Statement below.</div></div>
+          <div class="legend-item"><span class="pin">4</span><div><b>Net Profit</b> — what's left after the government takes its tax share. This is the number that ultimately belongs to shareholders.</div></div>
+          <div class="legend-item"><span class="pin">5</span><div><b><span class="term" data-term="eps">EPS</span></b> — that Net Profit divided across every share outstanding. Used later to work out the P/E ratio in Step 7.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>② The Balance Sheet</h3>
+        <div class="stmt">
+          <div class="stmt-title">AUDITED CONSOLIDATED BALANCE SHEET — AS AT 31 MARCH 2026 (₹ in Crore)</div>
+          <table>
+            <tr><th>Particulars</th><th>31 Mar 2026</th><th>31 Mar 2025</th></tr>
+            <tr><td colspan="3"><b>ASSETS</b></td></tr>
+            <tr><td>Total Non-Current Assets (long-term)</td><td class="num">1,583,891</td><td class="num">1,450,851</td></tr>
+            <tr><td>Total Current Assets (short-term)</td><td class="num">594,249</td><td class="num">499,270</td></tr>
+            <tr class="spot"><td><span class="pin">1</span>Total Assets</td><td class="num">2,178,140</td><td class="num">1,950,121</td></tr>
+            <tr><td colspan="3"><b>EQUITY AND LIABILITIES</b></td></tr>
+            <tr class="spot"><td><span class="pin">2</span>Total Equity</td><td class="num">1,085,866</td><td class="num">1,009,626</td></tr>
+            <tr><td>Total Non-Current Liabilities</td><td class="num">551,020</td><td class="num">486,758</td></tr>
+            <tr><td>Total Current Liabilities</td><td class="num">541,254</td><td class="num">453,737</td></tr>
+            <tr class="spot"><td><span class="pin">3</span>Total Liabilities</td><td class="num">1,092,274</td><td class="num">940,495</td></tr>
+            <tr class="spot"><td><span class="pin">4</span>Cash &amp; Cash Equivalents <span style="font-weight:400;color:var(--muted);">(tucked inside Current Assets)</span></td><td class="num">145,977</td><td class="num">106,502</td></tr>
+          </table>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="legend-item"><span class="pin">1</span><div><b>Total Assets</b> — everything the company owns, added up: factories, cash, inventory, investments, buildings, everything.</div></div>
+          <div class="legend-item"><span class="pin">2</span><div><b>Total Equity</b> — the shareholders' true "net worth" in the company: Assets minus Liabilities. If the company sold everything and paid off everyone it owed, this is roughly what would be left.</div></div>
+          <div class="legend-item"><span class="pin">3</span><div><b>Total Liabilities</b> — everything the company owes to others: lenders, suppliers, tax authorities.</div></div>
+          <div class="legend-item"><span class="pin">4</span><div><b>Cash &amp; Cash Equivalents</b> — the actual cash sitting in the bank right now. Remember this number too — we're about to trace it to the Cash Flow Statement.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>③ The Cash Flow Statement</h3>
+        <div class="stmt">
+          <div class="stmt-title">AUDITED CONSOLIDATED CASH FLOW STATEMENT — YEAR ENDED 31 MARCH 2026 (₹ in Crore)</div>
+          <table>
+            <tr><th>Particulars</th><th>FY26</th><th>FY25</th></tr>
+            <tr class="spot"><td><span class="pin">1</span>Net Profit Before Tax (starting point)</td><td class="num">123,162</td><td class="num">106,017</td></tr>
+            <tr class="spot"><td><span class="pin">2</span>Net Cash Flow from Operating Activities</td><td class="num">192,113</td><td class="num">178,703</td></tr>
+            <tr><td>Net Cash Flow used in Investing Activities</td><td class="num">(101,089)</td><td class="num">(137,535)</td></tr>
+            <tr><td>&nbsp;&nbsp;— of which spent on new plants/network (Capex)</td><td class="num">(122,916)</td><td class="num">(139,967)</td></tr>
+            <tr><td>Net Cash Flow used in Financing Activities</td><td class="num">(51,549)</td><td class="num">(31,891)</td></tr>
+            <tr><td>Net Increase in Cash</td><td class="num">39,475</td><td class="num">9,277</td></tr>
+            <tr><td>Opening Cash Balance</td><td class="num">106,502</td><td class="num">97,225</td></tr>
+            <tr class="spot"><td><span class="pin">3</span>Closing Cash Balance</td><td class="num">145,977</td><td class="num">106,502</td></tr>
+          </table>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="legend-item"><span class="pin">1</span><div><b>Starting point</b> — literally the same "Profit Before Tax" figure copied from the bottom of the Income Statement above.</div></div>
+          <div class="legend-item"><span class="pin">2</span><div><b>Cash from Operating Activities</b> — the single most-watched line in this whole statement: is the core, everyday business actually generating cash, separate from accounting profit? Here it's ₹1,92,113 Cr — comfortably higher than the ₹95,754 Cr net profit, a healthy sign that profits are "real."</div></div>
+          <div class="legend-item"><span class="pin">3</span><div><b>Closing Cash Balance</b> — the actual cash in the bank on the last day of the year. Watch what this connects to next.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Now watch how the three statements connect</h3>
+        <p style="color:var(--muted);font-size:13.5px;">This is the single most important idea in this whole step: all three statements describe the <i>same company</i>, just from three different angles — and two numbers pass directly from one statement into the next.</p>
+        <div class="flow">
+          <div class="flow-box"><div class="fb-label">Bottom of the Income Statement</div><div class="fb-val">Profit Before Tax = ₹1,23,162 Cr</div></div>
+          <div class="flow-arrow">↓<span class="fa-cap">flows straight into</span></div>
+          <div class="flow-box"><div class="fb-label">Top of the Cash Flow Statement</div><div class="fb-val">Net Profit Before Tax = ₹1,23,162 Cr &nbsp;<span class="badge good">Same number</span></div></div>
+          <div class="flow-arrow">↓<span class="fa-cap">after adjusting for non-cash items &amp; day-to-day working capital</span></div>
+          <div class="flow-box"><div class="fb-label">Bottom of the Cash Flow Statement</div><div class="fb-val">Closing Cash Balance = ₹1,45,977 Cr</div></div>
+          <div class="flow-arrow">↓<span class="fa-cap">flows straight into</span></div>
+          <div class="flow-box"><div class="fb-label">Balance Sheet — Current Assets</div><div class="fb-val">Cash &amp; Cash Equivalents = ₹1,45,977 Cr &nbsp;<span class="badge good">Same number</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📋 Your Cheat Sheet — What We Pulled Out, In One Place</h3>
+        <table>
+          <tr><th>What We're Tracking</th><th>FY26</th><th>FY25</th><th>Where It Came From</th></tr>
+          <tr><td>Revenue from Operations</td><td class="num">₹10,75,675 Cr</td><td class="num">₹9,80,136 Cr</td><td>Income Statement</td></tr>
+          <tr><td>Net Profit</td><td class="num">₹95,754 Cr</td><td class="num">₹81,309 Cr</td><td>Income Statement</td></tr>
+          <tr><td>Total Assets</td><td class="num">₹21,78,140 Cr</td><td class="num">₹19,50,121 Cr</td><td>Balance Sheet</td></tr>
+          <tr><td>Total Equity</td><td class="num">₹10,85,866 Cr</td><td class="num">₹10,09,626 Cr</td><td>Balance Sheet</td></tr>
+          <tr><td>Cash from Operating Activities</td><td class="num">₹1,92,113 Cr</td><td class="num">₹1,78,703 Cr</td><td>Cash Flow Statement</td></tr>
+          <tr><td>Cash &amp; Bank Balance, year-end</td><td class="num">₹1,45,977 Cr</td><td class="num">₹1,06,502 Cr</td><td>Cash Flow = Balance Sheet</td></tr>
+        </table>
+        <p style="color:var(--muted);font-size:12px;margin-top:10px;">Source: Reliance Industries' official Audited Consolidated Financial Results for the year ended 31 March 2026, filed with the stock exchanges on 24 April 2026 (ril.com/investors/financial-reporting). Steps 4, 5 and 6 build on this exact same cheat sheet.</p>
+      </div>
+    </section>
+
+    <!-- STEP 3 (was 2) -->
+    <section id="step3">
+      <div class="step-head"><div class="step-badge">3</div><h2>Check Who Owns It</h2></div>
+      <p class="step-sub"><span class="term" data-term="shareholding_pattern">Shareholding pattern</span> tells you who has skin in the game, and whether "smart money" is buying or selling.</p>
+
+      <div class="card">
+        <div class="grid2">
+          <table>
+            <tr><th>Holder</th><th>June 2026</th><th>Prior Qtr</th><th>Trend</th></tr>
+            <tr><td><span class="term" data-term="promoter">Promoter</span> (Ambani family &amp; group)</td><td><b>50.48%</b></td><td>50.00%</td><td><span class="badge good">↑ Rising</span></td></tr>
+            <tr><td><span class="term" data-term="fii">FII</span> (Foreign Institutions)</td><td>17.19%</td><td>18.67%</td><td><span class="badge watch">↓ Falling</span></td></tr>
+            <tr><td><span class="term" data-term="dii">DII</span> (Domestic Institutions)</td><td>21.04%</td><td>20.41%</td><td><span class="badge good">↑ Rising</span></td></tr>
+            <tr><td>&nbsp;&nbsp;of which <span class="term" data-term="mutual_fund">Mutual Funds</span></td><td>10.11%</td><td>9.78%</td><td><span class="badge good">↑ Rising</span></td></tr>
+            <tr><td>Retail / Public (people like you)</td><td>~10.79%</td><td>–</td><td><span class="badge neutral">Stable</span></td></tr>
+          </table>
+          <div>
+            <div class="callout">Promoters just crossed the psychologically important <b>50% majority mark</b> — often read as a sign of confidence, since promoters are buying with their own money, not public money.</div>
+            <div class="callout r">Foreign institutions (FII) trimmed their stake while domestic institutions (DII) absorbed it. This pattern is common across large Indian stocks and isn't automatically a bad sign — but it's worth tracking over several quarters, not just one.</div>
+          </div>
+        </div>
+      </div>
+      <div class="callout q">Rule of thumb: one quarter of data is a snapshot, not a trend. Always look at 3–4 consecutive quarters of shareholding data before drawing a conclusion.</div>
+    </section>
+
+    <!-- STEP 4 (was 3) -->
+    <section id="step4">
+      <div class="step-head"><div class="step-badge">4</div><h2>Income Statement, In Depth</h2></div>
+      <p class="step-sub">We already met the Income Statement in Step 2. Now let's connect it back to the four businesses from Step 1.</p>
+
+      <div class="card">
+        <h3>Which business actually made the ₹95,754 Cr profit?</h3>
+        <table>
+          <tr><th>Business (from Step 1)</th><th>FY26 Revenue</th><th>FY26 <span class="term" data-term="ebitda">EBITDA</span></th><th>Rough EBITDA Margin</th></tr>
+          <tr><td>Refinery &amp; Plastics (O2C)</td><td class="num">₹6,62,401 Cr</td><td class="num">₹60,546 Cr</td><td class="num">~9%</td></tr>
+          <tr><td>Gas Drilling (Oil &amp; Gas)</td><td class="num">₹23,861 Cr</td><td class="num">₹19,050 Cr</td><td class="num">~80%</td></tr>
+          <tr><td>Shops (Retail)</td><td class="num">₹3,71,085 Cr</td><td class="num">₹27,034 Cr</td><td class="num">~7%</td></tr>
+          <tr><td>Phone &amp; Internet (Digital Services / Jio)</td><td class="num">₹1,76,164 Cr</td><td class="num">₹76,560 Cr</td><td class="num">~43%</td></tr>
+        </table>
+        <div class="callout">Notice something striking: the phone &amp; internet business sells only about 15% of the group's total revenue, yet generates the single <b>largest</b> slice of operating profit — more than the refinery business, which sells almost four times as much. This is exactly the "cheap to add one more customer" idea from Step 1, showing up in real numbers.</div>
+        <div class="callout r">The gas-drilling business shows an eye-catching ~80% margin — but don't be fooled by the percentage alone. It's a tiny business in absolute rupee terms compared to the other three. A high margin on a small base still means a small profit.</div>
+      </div>
+
+      <div class="card">
+        <h3>A more recent pulse check: the latest reported quarter</h3>
+        <p style="color:var(--muted);font-size:13px;">Everything above was for the full year ended March 2026. Reliance has since reported one more, even more recent quarter — April to June 2026 — so let's glance at that too.</p>
+        <div class="grid3">
+          <div class="metric-box"><div class="m-val">₹3,40,257 Cr</div><div class="m-label">Revenue (Apr–Jun 2026)</div><div class="m-note">+24.5% year-on-year</div></div>
+          <div class="metric-box"><div class="m-val">₹54,067 Cr</div><div class="m-label">EBITDA</div><div class="m-note">Record quarter · +10.1%</div></div>
+          <div class="metric-box"><div class="m-val">₹23,196 Cr</div><div class="m-label">Net Profit</div><div class="m-note">Record quarter · +6.1%</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5 (was 4) -->
+    <section id="step5">
+      <div class="step-head"><div class="step-badge">5</div><h2>Balance Sheet, In Depth</h2></div>
+      <p class="step-sub">We saw the raw balance sheet in Step 2. Now let's judge whether the company's financial health looks safe.</p>
+
+      <div class="grid3">
+        <div class="metric-box"><div class="m-val">₹668.05</div><div class="m-label"><span class="term" data-term="book_value">Book Value</span> / Share</div><div class="m-note">FY26 · shareholders' equity ÷ shares</div></div>
+        <div class="metric-box"><div class="m-val">0.41x</div><div class="m-label"><span class="term" data-term="debt_equity">Debt-to-Equity</span></div><div class="m-note"><span class="badge good">Conservative</span> officially disclosed</div></div>
+        <div class="metric-box"><div class="m-val">1.10x</div><div class="m-label"><span class="term" data-term="current_ratio">Current Ratio</span></div><div class="m-note"><span class="badge good">Healthy</span></div></div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>What the numbers say</h3>
+        <ul class="tight">
+          <li>RIL shares carry a <span class="term" data-term="face_value">face value</span> of just ₹10 — a reminder that the ₹10 accounting par value has nothing to do with the ₹1,327 market price; the share simply trades at roughly 133x its face value.</li>
+          <li>A <span class="term" data-term="debt_equity">debt-to-equity</span> ratio of <b>0.41x</b> (officially disclosed by the company) means for every ₹1 of shareholder equity, RIL carries ₹0.41 of debt — conservative for a business this capital-hungry. You may see slightly different debt-to-equity figures on other websites; that's usually because each provider defines "debt" a little differently. Always check how a ratio is calculated before comparing it across sources.</li>
+          <li>The <span class="term" data-term="current_ratio">current ratio</span> of <b>1.10x</b> means short-term assets (cash, inventory, receivables) cover short-term debts (due within a year) comfortably, with a small buffer to spare.</li>
+          <li><span class="term" data-term="interest_coverage">Interest coverage</span> stands at <b>5.55x</b> — operating profit covers interest expense more than five times over, a comfortable cushion.</li>
+          <li><span class="term" data-term="net_debt">Net Debt</span> to EBITDA is <b>0.60x</b> — a common way analysts gauge how many years of operating profit it would take to clear all debt after using up all cash. Anything meaningfully below 1x is considered very comfortable.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- STEP 6 (was 5) -->
+    <section id="step6">
+      <div class="step-head"><div class="step-badge">6</div><h2>Cash Flow, In Depth</h2></div>
+      <p class="step-sub">Profit is an accounting opinion; cash is a fact. This step checks whether reported profit is "real."</p>
+
+      <div class="grid2">
+        <div class="metric-box"><div class="m-val">~2.0x</div><div class="m-label"><span class="term" data-term="ocf">Operating Cash Flow</span> ÷ Net Profit</div><div class="m-note"><span class="badge good">Strong quality of earnings</span></div></div>
+        <div class="metric-box"><div class="m-val">~0.72x</div><div class="m-label"><span class="term" data-term="fcf">Free Cash Flow</span> ÷ Net Profit</div><div class="m-note"><span class="badge watch">Heavy capex phase</span></div></div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <p>Operating cash flow of ₹1,92,113 Cr running at roughly <b>2 times</b> reported net profit (₹95,754 Cr) is a good sign — it means the profit shown in the Income Statement is well-backed by actual cash coming in, not just accounting adjustments.</p>
+        <p>But <span class="term" data-term="fcf">free cash flow</span> — operating cash minus the ₹1,22,916 Cr spent on new plants, towers and network (<span class="term" data-term="capex">capex</span>) — leaves about ₹69,197 Cr "free," roughly 0.72x of net profit. That's not automatically bad — it tells you RIL is reinvesting heavily (5G, new energy, retail expansion) rather than banking the cash. The trade-off: less cash is "free" right now for large dividends or fast debt paydown.</p>
+        <div class="callout q">Reflection: heavy capex today is a bet on tomorrow's earnings. The open question for any investor is whether that spending eventually converts into proportionately higher future profit — or just higher depreciation and debt.</div>
+      </div>
+    </section>
+
+    <!-- STEP 7 (was 6) -->
+    <section id="step7">
+      <div class="step-head"><div class="step-badge">7</div><h2>Valuation Ratios</h2></div>
+      <p class="step-sub">The same rupee of profit can be "cheap" or "expensive" depending on the price you pay for it. This is what valuation ratios measure.</p>
+
+      <div class="grid3">
+        <div class="metric-box"><div class="m-val">~22.2x</div><div class="m-label"><span class="term" data-term="pe">P/E Ratio</span></div><div class="m-note">₹1,327 price ÷ ₹59.69 FY26 EPS</div></div>
+        <div class="metric-box"><div class="m-val">~1.99x</div><div class="m-label"><span class="term" data-term="pb">P/B Ratio</span></div><div class="m-note">₹1,327 price ÷ ₹668 book value</div></div>
+        <div class="metric-box"><div class="m-val">~8.9%</div><div class="m-label"><span class="term" data-term="roe">ROE</span></div><div class="m-note"><span class="badge watch">Modest for its scale</span></div></div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Reading the ROE number honestly</h3>
+        <p>An <span class="term" data-term="roe">ROE</span> of roughly 8.9% is on the lower side for a company of RIL's stature — it means the company generated about ₹8.90 of profit for every ₹100 of shareholder equity. One honest explanation: large amounts of capital have been deployed into Retail, Jio, and New Energy that haven't yet reached full earnings potential relative to the capital invested. Whether that capital eventually earns its keep is one of the central questions for anyone studying this stock.</p>
+        <div class="callout">A stock is never "cheap" or "expensive" in isolation — <span class="term" data-term="pe">P/E</span> and <span class="term" data-term="pb">P/B</span> only mean something when compared against the company's own history, and against similar businesses (peers). We've deliberately not done that peer comparison yet — that's a natural next step once you're comfortable reading Reliance on its own.</div>
+      </div>
+    </section>
+
+    <!-- STEP 8 (was 7) -->
+    <section id="step8">
+      <div class="step-head"><div class="step-badge">8</div><h2>Dividend Policy</h2></div>
+      <p class="step-sub">How much of the profit is paid back to shareholders in cash, versus reinvested into the business?</p>
+
+      <div class="grid3">
+        <div class="metric-box"><div class="m-val">₹6.00</div><div class="m-label">FY25-26 <span class="term" data-term="dividend">Dividend</span> / Share</div></div>
+        <div class="metric-box"><div class="m-val">~0.5%</div><div class="m-label"><span class="term" data-term="dividend_yield">Dividend Yield</span></div></div>
+        <div class="metric-box"><div class="m-val">+11.4%</div><div class="m-label">5-Year Dividend Growth Rate</div></div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <p>RIL paid ₹5.50/share for FY24-25 and its board recommended ₹6.00/share for FY25-26 — dividends are paid once a year. A sub-1% yield is low in absolute terms, but that's a deliberate pattern for a company still in a heavy capex/growth phase (see Step 6): profit is being redirected into building Jio's network, expanding retail stores, and the New Energy business, rather than distributed as cash.</p>
+        <div class="callout q">General pattern worth remembering: a low dividend yield isn't automatically a bad sign. It often signals a growth-and-reinvestment strategy rather than a cash-cow, mature-business strategy. The two require different expectations from an investor.</div>
+      </div>
+    </section>
+
+    <!-- STEP 9 (was 8) -->
+    <section id="step9">
+      <div class="step-head"><div class="step-badge">9</div><h2>Risks &amp; Catalysts to Track</h2></div>
+      <p class="step-sub">What could change this story — for better or worse — from here?</p>
+
+      <div class="grid2">
+        <div class="card">
+          <h3><span class="badge risk">Watch</span> Jio IPO (expected 2026)</h3>
+          <ul class="tight">
+            <li>Jio Platforms carries roughly ₹70,781 Cr of borrowings (as of Mar 2026) with restrictive loan conditions.</li>
+            <li>A disputed government demand of ~₹1,389 Cr (an extra telecom licence charge) is pending.</li>
+            <li>Reliance Retail is Jio's sole distributor for prepaid recharges — this related-company arrangement made up ~77% of Jio's revenue in FY26, a concentration worth understanding.</li>
+            <li>Making money from 5G at full scale remains an open question for the whole telecom industry, not just Jio.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="badge watch">Watch</span> Retail IPO (expected 2027)</h3>
+          <ul class="tight">
+            <li>Reliance's retail arm could be valued near <b>$200 billion</b> at IPO, per market estimates.</li>
+            <li>Both planned IPOs raise a fair question: will existing RIL shareholders fully capture the value being unlocked, or will some of it stay "trapped" at the parent-company level (sometimes called a <span class="term" data-term="holdco_discount">holding company discount</span>)?</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span class="badge risk">Structural risk</span> Refinery Business Is Cyclical</h3>
+          <p>The refinery &amp; plastics business is exposed to global crude oil prices and <span class="term" data-term="grm">refining margins</span> — factors entirely outside the company's control, driven by global supply/demand and geopolitics.</p>
+        </div>
+        <div class="card">
+          <h3><span class="badge neutral">Operational</span> Execution Risk</h3>
+          <p>Large, ongoing spending programmes (5G, New Energy/green hydrogen, retail expansion) carry execution risk — and isolated incidents like a past multi-hour 5G/JioAirFiber outage are reminders that scale brings operational complexity.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 10 (was 9) -->
+    <section id="step10">
+      <div class="step-head"><div class="step-badge">10</div><h2>Putting It Together</h2></div>
+      <p class="step-sub">No single number tells the whole story. Here's how the nine steps above connect.</p>
+      <div class="card">
+        <ul class="tight">
+          <li><b>Business (Step 1):</b> four very different everyday businesses bundled into one stock — a refinery, a gas well, a phone network, and a supermarket chain.</li>
+          <li><b>Reading the statements (Step 2):</b> profit flows from the Income Statement into the Cash Flow Statement, and cash flows from there into the Balance Sheet — three views of the same company.</li>
+          <li><b>Ownership (Step 3):</b> promoters just crossed 50%, a confidence signal — but FII selling is worth monitoring over more quarters.</li>
+          <li><b>Growth (Step 4):</b> revenue and record profit are growing, powered mainly by the phone &amp; internet business and the shops.</li>
+          <li><b>Balance sheet (Step 5):</b> leverage is conservative (0.41x debt-to-equity) with comfortable interest cover, even as absolute debt rises to fund growth.</li>
+          <li><b>Cash quality (Step 6):</b> profit is well-backed by cash, but heavy spending on new projects means free cash is thin right now.</li>
+          <li><b>Valuation (Step 7):</b> trades at roughly 2x book value with an ROE that looks modest today — the bet is that current spending converts into higher future ROE.</li>
+          <li><b>Shareholder returns (Step 8):</b> low dividend yield, consistent with a reinvestment-first strategy.</li>
+          <li><b>Risks (Step 9):</b> two major IPOs on the horizon (Jio, Retail) are the biggest swing factors — potential value-unlocking events that also carry execution and structural risk.</li>
+        </ul>
+        <div class="callout q">This is not a verdict — it's a map. The real skill in analysis is holding all ten steps in your head at once, and updating your view every quarter as new numbers arrive. Once this feels intuitive for Reliance, we can either (a) run the same framework on a peer for comparison, or (b) go deeper into any one step.</div>
+      </div>
+    </section>
+
+    <footer>
+      Steps 2, 4, 5 and 6 use figures directly from Reliance Industries' official Audited Consolidated Financial Results for the quarter/year ended 31 March 2026, filed with the stock exchanges on 24 April 2026 (source: ril.com/investors/financial-reporting). Shareholding, dividend, and latest-quarter figures are compiled from NSE filings and financial data platforms as of July 2026. Figures may differ slightly across providers due to methodology differences — always cross-check against the company's official filings before making decisions. Educational content only; not investment advice.
+    </footer>
+  </main>
+</div>
+
+<div id="term-popover">
+  <span class="tp-close" onclick="closePopover()">✕</span>
+  <div class="tp-title" id="tp-title"></div>
+  <div id="tp-body"></div>
+</div>
+
+<div id="glossary-overlay" onclick="if(event.target===this) closeGlossary()">
+  <div id="glossary-panel">
+    <span class="g-close" onclick="closeGlossary()">✕</span>
+    <h2>Glossary — A to Z</h2>
+    <input id="glossary-search" placeholder="Search a term..." oninput="filterGlossary()">
+    <div id="glossary-list"></div>
+  </div>
+</div>
+
+<script>
+const GLOSSARY = {
+  market_cap: ["Market Capitalization","The total market value of a company's shares: Share Price × Total Number of Shares. A rough measure of the company's overall size, as judged by the stock market."],
+  "52w": ["52-Week Range","The lowest and highest price the stock has traded at over the past year — useful context for whether the current price is near its recent highs or lows."],
+  o2c: ["Oil-to-Chemicals (O2C)","Reliance's refinery-and-plastics business: turning crude oil into fuel and chemical raw material. A high-volume, lower-margin, commodity-price-sensitive business."],
+  ebitda: ["EBITDA","Earnings Before Interest, Tax, Depreciation & Amortization. A measure of core operating profit, before the effects of financing decisions, tax rules, and accounting write-downs. Useful for comparing operating performance across companies with different debt or tax situations."],
+  eps: ["EPS (Earnings Per Share)","Net Profit divided by the total number of outstanding shares — the profit attributable to each individual share."],
+  income_statement: ["Income Statement (P&L)","The financial statement showing revenue, costs, and profit over a period (a quarter or a year) — like a salary slip for a company. Answers: did the business make money, and how much?"],
+  balance_sheet: ["Balance Sheet","A snapshot, on one specific date, of everything a company owns (assets), everything it owes (liabilities), and what's left for shareholders (equity) — like a photo of your bank balance and loans, taken today."],
+  cash_flow: ["Cash Flow Statement","Tracks every rupee that actually moved in and out of the company's bank account over a period — like a bank statement — split into operating, investing, and financing activities."],
+  nse_bse: ["NSE / BSE","The National Stock Exchange and Bombay Stock Exchange — India's two main stock exchanges, where listed companies are legally required to file their quarterly and annual results."],
+  book_value: ["Book Value (per share)","Total shareholder equity divided by number of shares — roughly, what shareholders would theoretically be left with per share if the company sold all assets and paid off all debts today, based on accounting values."],
+  face_value: ["Face Value","The nominal/par value assigned to a share when it is issued (e.g., ₹10). Mostly an accounting reference point, unrelated to the actual market price of the stock."],
+  debt_equity: ["Debt-to-Equity Ratio","Total debt divided by shareholder equity. Shows how much a company relies on borrowed money versus owners' capital. Lower generally means less financial risk, though the 'right' level varies by industry."],
+  current_ratio: ["Current Ratio","Current (short-term) Assets divided by Current (short-term) Liabilities. Shows whether a company can comfortably pay its bills due within the next year. Above 1x is generally considered healthy."],
+  interest_coverage: ["Interest Coverage Ratio","Operating profit (EBIT/EBITDA) divided by interest expense. Shows how comfortably a company can pay the interest on its debt from its operating earnings. Higher is safer."],
+  net_debt: ["Net Debt","Total borrowings minus cash and cash-like investments on hand. Often compared to EBITDA (Net Debt ÷ EBITDA) to judge, roughly, how many years of operating profit it would take to clear all debt."],
+  shareholding_pattern: ["Shareholding Pattern","A breakdown of who owns a company's shares — promoters, domestic institutions, foreign institutions, retail investors, etc. — disclosed every quarter on stock exchanges."],
+  promoter: ["Promoter","The founding individual(s) or group with controlling ownership and management influence over a company — for Reliance, the Ambani family and associated entities."],
+  fii: ["FII (Foreign Institutional Investor)","Large investment institutions based outside India (foreign mutual funds, pension funds, etc.) that invest in Indian stocks."],
+  dii: ["DII (Domestic Institutional Investor)","Indian institutions — mutual funds, insurance companies, banks — that invest in Indian stocks on behalf of domestic savers."],
+  mutual_fund: ["Mutual Fund","A pooled investment vehicle where many investors' money is collected and professionally invested across a portfolio of stocks/bonds. A subset of DII holdings."],
+  ocf: ["Operating Cash Flow","The actual cash generated (or used) by a company's core, everyday business operations — as distinct from accounting profit, which can include non-cash items."],
+  fcf: ["Free Cash Flow","Operating Cash Flow minus Capital Expenditure. The cash truly 'free' for the company to pay dividends, reduce debt, or reinvest, after funding the assets needed to run and grow the business."],
+  capex: ["Capital Expenditure (Capex)","Money spent on acquiring, building, or upgrading long-term physical assets — factories, telecom towers, stores, machinery — as opposed to day-to-day operating expenses."],
+  pe: ["P/E Ratio (Price-to-Earnings)","Share Price divided by Earnings Per Share. Roughly: how many years of current profit you're 'paying for' at today's price. A common (though imperfect on its own) valuation yardstick."],
+  pb: ["P/B Ratio (Price-to-Book)","Share Price divided by Book Value per Share. Shows how much the market is paying relative to the accounting net worth of the company."],
+  roe: ["ROE (Return on Equity)","Net Profit divided by Shareholder Equity, as a percentage. Measures how efficiently a company turns shareholders' capital into profit."],
+  dividend: ["Dividend","A portion of profit a company chooses to pay out in cash directly to shareholders, usually per share, instead of reinvesting it in the business."],
+  dividend_yield: ["Dividend Yield","Annual Dividend per Share divided by the current Share Price, as a percentage — shows the cash return you'd earn from dividends alone at today's price."],
+  holdco_discount: ["Holding Company Discount","A tendency for a conglomerate's combined market value to trade below the sum of what its individual businesses would be worth if valued separately — often because investors can't easily 'unlock' the value of each piece on its own."],
+  grm: ["Gross Refining Margin (GRM)","The profit an oil refiner earns per barrel of crude oil processed into finished products (petrol, diesel, etc.) — the difference between the value of refined products and the cost of the crude oil input."]
+};
+
+function showPopover(el){
+  const key = el.getAttribute('data-term');
+  const entry = GLOSSARY[key];
+  if(!entry) return;
+  const pop = document.getElementById('term-popover');
+  document.getElementById('tp-title').textContent = entry[0];
+  document.getElementById('tp-body').textContent = entry[1];
+  const rect = el.getBoundingClientRect();
+  let top = rect.bottom + 8;
+  let left = rect.left;
+  pop.style.display = 'block';
+  const popRect = pop.getBoundingClientRect();
+  if(left + popRect.width > window.innerWidth - 16) left = window.innerWidth - popRect.width - 16;
+  if(top + popRect.height > window.innerHeight - 16) top = rect.top - popRect.height - 8;
+  pop.style.top = top + 'px';
+  pop.style.left = left + 'px';
+}
+function closePopover(){ document.getElementById('term-popover').style.display='none'; }
+
+document.addEventListener('click', function(e){
+  if(e.target.classList.contains('term')){
+    e.stopPropagation();
+    showPopover(e.target);
+  } else if(!e.target.closest('#term-popover')){
+    closePopover();
+  }
+});
+
+function openGlossary(){
+  buildGlossaryList('');
+  document.getElementById('glossary-overlay').style.display='flex';
+  document.getElementById('glossary-search').value='';
+  document.getElementById('glossary-search').focus();
+}
+function closeGlossary(){ document.getElementById('glossary-overlay').style.display='none'; }
+function buildGlossaryList(filter){
+  const list = document.getElementById('glossary-list');
+  const entries = Object.values(GLOSSARY).sort((a,b)=>a[0].localeCompare(b[0]));
+  list.innerHTML = entries
+    .filter(e => e[0].toLowerCase().includes(filter.toLowerCase()) || e[1].toLowerCase().includes(filter.toLowerCase()))
+    .map(e => `<div class="g-item"><div class="g-term">${e[0]}</div><div class="g-def">${e[1]}</div></div>`)
+    .join('');
+}
+function filterGlossary(){ buildGlossaryList(document.getElementById('glossary-search').value); }
+</script>
+
+</body>
+</html>
